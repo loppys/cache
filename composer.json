@@ -1,0 +1,17 @@
+{
+  "name": "libraries/cache",
+  "description": "vengine cache",
+  "type": "library",
+  "autoload": {
+    "psr-4": {
+      "Vengine\\Cache\\": "src/"
+    }
+  },
+  "license": "MIT",
+  "require": {
+    "php": ">=8.0",
+    "ext-json": "*",
+    "psr/simple-cache": "3.0.x-dev"
+  },
+  "minimum-stability": "dev"
+}
