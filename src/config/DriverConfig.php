@@ -16,7 +16,7 @@ class DriverConfig implements ArrayAccess
 
     protected bool $enabled = false;
 
-    protected int $lifetime = 0;
+    protected int $lifetime = 900;
 
     protected array $options = [];
 

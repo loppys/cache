@@ -33,8 +33,10 @@ abstract class AbstractDriver implements CacheInterface
 
             $this->setConfig($config);
         } else {
-            $this->setConfig(new DriverConfig('dummy'));
+            $this->setConfig($this->getConfig());
         }
+
+        $this->lifetime = $this->getConfig()->getLifetime();
     }
 
     public function has(string $key): bool
