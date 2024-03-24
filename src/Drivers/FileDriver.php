@@ -12,26 +12,51 @@ class FileDriver extends AbstractDriver
 
     protected function hasValue(string $key): bool
     {
-        return file_exists($this->config->getFolder() . $key);
+        return !empty($this->get($key));
     }
 
     protected function getValue(string $key): mixed
     {
-        return true;
+        $path = $this->getPath($key);
+        if (file_exists($path)) {
+            return file_get_contents($path);
+        }
+
+        return null;
     }
 
     protected function setValue(string $key, mixed $data, DateInterval|int|null $ttl = null): bool
     {
-        return true;
+        $path = $this->getPath($key);
+        if (file_exists($path)) {
+            return false;
+        }
+
+        return (bool)file_put_contents($path, $data);
     }
 
     protected function deleteValue(string $key): bool
     {
-        return true;
+        return unlink($this->getPath($key));
     }
 
     public function clear(): bool
     {
+        if (!$this->config instanceof FileDriverConfig) {
+            return false;
+        }
+
+        foreach (scandir($this->config->getFolder()) as $f) {
+            if (is_file($f) && !unlink($f)) {
+                return false;
+            }
+        }
+
         return true;
+    }
+
+    private function getPath(string $key): string
+    {
+        return $this->config->getFolder() . DIRECTORY_SEPARATOR . md5(sha1($key)) . '.drc';
     }
 }

@@ -17,7 +17,7 @@ abstract class AbstractDriver implements CacheInterface
 
     protected bool $configIgnore = false;
 
-    protected int $lifetime;
+    protected int $lifetime = 900;
 
     /**
      * @throws ConfigNotFoundException
@@ -32,22 +32,36 @@ abstract class AbstractDriver implements CacheInterface
             }
 
             $this->setConfig($config);
+        } else {
+            $this->setConfig(new DriverConfig('dummy'));
         }
     }
 
     public function has(string $key): bool
     {
+        if (!$this->config->isEnabled()) {
+            return false;
+        }
+
         return $this->hasValue($this->buildKey($key));
     }
 
     public function get(string $key, mixed $default = null): mixed
     {
+        if (!$this->config->isEnabled()) {
+            return false;
+        }
+
         $value = $this->getValue($this->buildKey($key));
         return $value === null ? $default : @unserialize($value);
     }
 
     public function set(string $key, mixed $value, null|int|DateInterval $ttl = null): bool
     {
+        if (!$this->config->isEnabled()) {
+            return false;
+        }
+
         return $this->setValue(
             $this->buildKey($key),
             serialize($value),
@@ -57,11 +71,19 @@ abstract class AbstractDriver implements CacheInterface
 
     public function delete(string $key): bool
     {
+        if (!$this->config->isEnabled()) {
+            return false;
+        }
+
         return $this->deleteValue($this->buildKey($key));
     }
 
     public function getMultiple(iterable $keys, mixed $default = null): iterable
     {
+        if (!$this->config->isEnabled()) {
+            return [false];
+        }
+
         $result = [];
         foreach ($keys as $key) {
             $result[$key] = $this->get($key, $default);
@@ -71,6 +93,10 @@ abstract class AbstractDriver implements CacheInterface
 
     public function setMultiple(iterable $values, null|int|DateInterval $ttl = null): bool
     {
+        if (!$this->config->isEnabled()) {
+            return false;
+        }
+
         $result = true;
         foreach ($values as $key => $value) {
             $result = $this->set($key, $value, $ttl) && $result;
@@ -80,6 +106,10 @@ abstract class AbstractDriver implements CacheInterface
 
     public function deleteMultiple($keys, $default = null): bool
     {
+        if (!$this->config->isEnabled()) {
+            return false;
+        }
+
         $result = true;
         foreach ($keys as $key) {
             $result = $this->delete($key) && $result;

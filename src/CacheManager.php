@@ -7,6 +7,7 @@ use Vengine\Cache\config\Configurator;
 use Vengine\Cache\Drivers\AbstractDriver;
 use Vengine\Cache\Exceptions\BuildConfigException;
 use Vengine\Cache\Exceptions\UniqueOptionException;
+use Vengine\Cache\Interfaces\ConfiguratorInterface;
 use Vengine\Cache\Storage\DriverStorage;
 
 class CacheManager
@@ -16,10 +17,14 @@ class CacheManager
      */
     protected array $drivers = [];
 
-    protected Configurator $configurator;
+    protected ConfiguratorInterface $configurator;
 
-    public function __construct(Configurator $configurator)
+    public function __construct(?ConfiguratorInterface $configurator = null)
     {
+        if ($configurator === null) {
+            $configurator = new Configurator();
+        }
+
         $this->configurator = $configurator;
     }
 
@@ -91,5 +96,10 @@ class CacheManager
     public function getDriver(string $name): ?AbstractDriver
     {
         return $this->drivers[$name] ?? null;
+    }
+
+    public function getConfigurator(): ConfiguratorInterface
+    {
+        return $this->configurator;
     }
 }

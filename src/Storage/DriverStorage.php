@@ -61,7 +61,7 @@ class DriverStorage
             ],
             'folder' => [
                 'alias' => 'root',
-                'value' => '/_cache/',
+                'value' => '/_cache/files/',
                 'type' => ConfigTypes::DIR,
             ]
         ],

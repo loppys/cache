@@ -7,10 +7,11 @@ use Vengine\Cache\config\ext\FileDriverConfig;
 use Vengine\Cache\Exceptions\AliasException;
 use Vengine\Cache\Exceptions\BuildConfigException;
 use Vengine\Cache\Exceptions\UniqueOptionException;
+use Vengine\Cache\Interfaces\ConfiguratorInterface;
 use Vengine\Cache\Storage\DriverStorage;
 use Vengine\Cache\Storage\ConfigTypes;
 
-class Configurator
+class Configurator implements ConfiguratorInterface
 {
     protected string $defaultDriver;
 
@@ -256,7 +257,7 @@ class Configurator
     }
 
     /**
-     * @throws UniqueOptionException
+     * @inheritdoc
      */
     public function addOption(string $name, mixed $value): static
     {
@@ -284,7 +285,7 @@ class Configurator
         return $this->settingList;
     }
 
-    public function get(string $driver, string $settingName): mixed
+    public function getSetting(string $driver, string $settingName): mixed
     {
         if (!empty($this->settingList[$driver]) && !empty($this->settingList[$driver][$settingName])) {
             return $this->settingList[$driver][$settingName];
@@ -293,7 +294,7 @@ class Configurator
         return null;
     }
 
-    public function set(string $driver, string $settingName, mixed $value): static
+    public function setSetting(string $driver, string $settingName, mixed $value): static
     {
         if (empty($this->settingList[$driver])) {
             $this->settingList[$driver] = [];
@@ -305,7 +306,7 @@ class Configurator
     }
 
     /**
-     * @throws AliasException
+     * @inheritdoc
      */
     public function setAlias(string $name, mixed $value, bool $system = false): static
     {
