@@ -118,7 +118,7 @@ class DriverConfig implements ArrayAccess
 
     public function getOption(string $name): mixed
     {
-        return $this->driverOptions[$name] ?? null;
+        return $this->options[$name] ?? null;
     }
 
     public function toArray(): array
