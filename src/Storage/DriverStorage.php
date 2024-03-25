@@ -68,26 +68,35 @@ class DriverStorage
         DriverStorage::TEMPLATE_DRIVER => [
             'export' => [
                 'configs' => [
-                    DriverStorage::FILE_DRIVER
-                ],
-                'options' => [
-                    'test'
+                    'default'
                 ]
             ]
         ],
         DriverStorage::CONFIG_DRIVER => [
             'export' => [
                 'configs' => [
-                    'default'
+                    DriverStorage::FILE_DRIVER
                 ],
                 'options' => [
                     [
-                        'name' => 'config_ext',
+                        'name' => 'config_file_ext',
                         'type' => ConfigTypes::CONFIG_EXT
-                    ],
-                    'database-adapter'
+                    ]
                 ]
             ]
-        ]
+        ],
+        DriverStorage::ROUTES_DRIVER => [
+            'export' => [
+                'configs' => [
+                    DriverStorage::FILE_DRIVER
+                ],
+                'options' => [
+                    [
+                        'name' => 'config_file_ext',
+                        'type' => ConfigTypes::CONFIG_EXT
+                    ]
+                ]
+            ]
+        ],
     ];
 }

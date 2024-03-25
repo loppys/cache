@@ -174,12 +174,12 @@ class Configurator implements ConfiguratorInterface
             $propertyInfo['type'] = $this->propertyDefine($propertyInfo['value'] ?? null);
         }
 
+        if (empty($propertyInfo['value'])) {
+            throw new BuildConfigException('property value empty');
+        }
+
         switch ($propertyInfo['type']) {
             case ConfigTypes::PROPERTY:
-                if (empty($propertyInfo['value'])) {
-                    throw new BuildConfigException('property value empty');
-                }
-
                 return $propertyInfo['value'];
             case ConfigTypes::DIR:
                 $alias = null;
@@ -210,7 +210,18 @@ class Configurator implements ConfiguratorInterface
                     throw new RuntimeException(sprintf('Directory "%s" was not created', $path));
                 }
 
-                return $path ?? '';
+                return $path;
+            case ConfigTypes::CLS:
+                return class_exists($propertyInfo['value']) ? $propertyInfo['value'] : null;
+            case ConfigTypes::OBJ:
+                $value = $propertyInfo['value'];
+                if (class_exists($value) && method_exists($value, 'getInstance')) {
+                    return $value::getInstance();
+                }
+
+                return null;
+            case ConfigTypes::FILE:
+                return file_exists($propertyInfo['value']) ? file_get_contents($propertyInfo['value']) : null;
             default:
                 throw new RuntimeException('failed to process property');
         }
@@ -225,7 +236,7 @@ class Configurator implements ConfiguratorInterface
             throw new BuildConfigException('property define impossible');
         }
 
-        if (is_object($property)) {
+        if (class_exists($property) && method_exists($property, 'getInstance')) {
             return ConfigTypes::OBJ;
         }
 
