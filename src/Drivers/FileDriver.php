@@ -28,11 +28,15 @@ class FileDriver extends AbstractDriver
     protected function setValue(string $key, mixed $data, DateInterval|int|null $ttl = null): bool
     {
         $path = $this->getPath($key);
-        if (file_exists($path) && (time() - filectime($path)) < $ttl) {
+        if (file_exists($path) && !$this->isExpire($path)) {
             return false;
         }
 
-        return (bool)file_put_contents($path, $data);
+        if (file_put_contents($path, $data, LOCK_EX) !== false) {
+            $this->setExpirationTime($path, $ttl);
+        }
+
+        return true;
     }
 
     protected function deleteValue(string $key): bool
@@ -47,8 +51,8 @@ class FileDriver extends AbstractDriver
         }
 
         foreach (scandir($this->config->getFolder()) as $f) {
-            if (is_file($f)) {
-                unlink($f);
+            if (is_file($f) && $this->isExpire($f)) {
+                $this->deleteValue($f);
             }
         }
 
@@ -58,5 +62,15 @@ class FileDriver extends AbstractDriver
     private function getPath(string $key): string
     {
         return $this->config->getFolder() . DIRECTORY_SEPARATOR . md5(sha1($key)) . '.drc';
+    }
+
+    protected function setExpirationTime($fullPath, $timeout): bool
+    {
+        return @touch($fullPath, $timeout);
+    }
+
+    protected function isExpire($fullPath): bool
+    {
+        return filemtime($fullPath) < time();
     }
 }

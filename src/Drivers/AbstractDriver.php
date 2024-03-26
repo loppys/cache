@@ -55,13 +55,17 @@ abstract class AbstractDriver implements CacheInterface
         }
 
         $value = $this->getValue($this->buildKey($key));
-        return $value === null ? $default : @unserialize($value);
+        return empty($value) ? $default : @unserialize($value);
     }
 
     public function set(string $key, mixed $value, null|int|DateInterval $ttl = null): bool
     {
         if (!$this->config->isEnabled()) {
             return false;
+        }
+
+        if (empty($ttl)) {
+            $ttl = $this->lifetime;
         }
 
         return $this->setValue(
