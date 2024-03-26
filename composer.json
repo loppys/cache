@@ -1,5 +1,5 @@
 {
-  "name": "libraries/cache",
+  "name": "vengine/cache",
   "description": "vengine cache",
   "type": "library",
   "autoload": {
