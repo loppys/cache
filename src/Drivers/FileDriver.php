@@ -28,7 +28,7 @@ class FileDriver extends AbstractDriver
     protected function setValue(string $key, mixed $data, DateInterval|int|null $ttl = null): bool
     {
         $path = $this->getPath($key);
-        if (file_exists($path)) {
+        if (file_exists($path) && (time() - filectime($path)) < $ttl) {
             return false;
         }
 
@@ -47,8 +47,8 @@ class FileDriver extends AbstractDriver
         }
 
         foreach (scandir($this->config->getFolder()) as $f) {
-            if (is_file($f) && !unlink($f)) {
-                return false;
+            if (is_file($f)) {
+                unlink($f);
             }
         }
 
