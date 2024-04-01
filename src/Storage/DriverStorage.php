@@ -69,7 +69,18 @@ class DriverStorage
             'export' => [
                 'configs' => [
                     'default'
+                ],
+                'options' => [
+                    [
+                        'name' => 'config_file_ext',
+                        'type' => ConfigTypes::CONFIG_EXT
+                    ]
                 ]
+            ],
+            'folder' => [
+                'alias' => 'root',
+                'value' => '/_cache/templates/',
+                'type' => ConfigTypes::DIR,
             ]
         ],
         DriverStorage::CONFIG_DRIVER => [

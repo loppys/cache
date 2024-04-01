@@ -2,32 +2,24 @@
 
 namespace Vengine\Cache\Drivers;
 
-use DateInterval;
+use RuntimeException;
 
-class TemplateCacheDriver extends AbstractDriver
+class TemplateCacheDriver extends FileDriver
 {
-    protected function hasValue(string $key): bool
-    {
-        return true;
-    }
+    protected bool $useSerialize = false;
 
-    protected function getValue(string $key): mixed
+    protected function getPath(string $key): string
     {
-        return true;
-    }
+        $fileName = md5(sha1($key));
+        $subDir = substr($fileName, 3, 3);
+        $subSubDir = substr($fileName, 1, 2); // :D
 
-    protected function setValue(string $key, mixed $data, DateInterval|int|null $ttl = null): bool
-    {
-        return true;
-    }
+        $fullPath = $this->config->getFolder() . DIRECTORY_SEPARATOR . $subDir . DIRECTORY_SEPARATOR . $subSubDir;
 
-    protected function deleteValue(string $key): bool
-    {
-        return true;
-    }
+        if (!is_dir($fullPath) && !mkdir($fullPath, 0777, true) && !is_dir($fullPath)) {
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $fullPath));
+        }
 
-    public function clear(): bool
-    {
-        return true;
+        return $fullPath . DIRECTORY_SEPARATOR . $fileName . '.php';
     }
 }

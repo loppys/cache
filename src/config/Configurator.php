@@ -48,7 +48,7 @@ class Configurator implements ConfiguratorInterface
         $config = new DriverConfig($driver);
         $instancePath = $config->getInstancePath();
 
-        if (file_exists($instancePath)) {
+        if (file_exists($instancePath) && !$this->isExpire($instancePath)) {
             return @unserialize(file_get_contents($instancePath));
         }
 
@@ -130,6 +130,8 @@ class Configurator implements ConfiguratorInterface
 
         if (!file_exists($instancePath)) {
             file_put_contents($instancePath, serialize($config));
+
+            $this->setExpirationTime($instancePath, $config->getInstanceLifetime());
         }
 
         return $config;
@@ -174,7 +176,7 @@ class Configurator implements ConfiguratorInterface
             $propertyInfo['type'] = $this->propertyDefine($propertyInfo['value'] ?? null);
         }
 
-        if (empty($propertyInfo['value'])) {
+        if (!isset($propertyInfo['value'])) {
             throw new BuildConfigException('property value empty');
         }
 
@@ -346,5 +348,15 @@ class Configurator implements ConfiguratorInterface
     public function getAliasList(): array
     {
         return $this->aliasList;
+    }
+
+    protected function setExpirationTime($fullPath, $timeout): bool
+    {
+        return @touch($fullPath, $timeout);
+    }
+
+    protected function isExpire($fullPath): bool
+    {
+        return filemtime($fullPath) < time();
     }
 }

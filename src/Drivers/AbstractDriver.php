@@ -19,6 +19,8 @@ abstract class AbstractDriver implements CacheInterface
 
     protected int $lifetime = 900;
 
+    protected bool $useSerialize = true;
+
     /**
      * @throws ConfigNotFoundException
      */
@@ -55,7 +57,10 @@ abstract class AbstractDriver implements CacheInterface
         }
 
         $value = $this->getValue($this->buildKey($key));
-        return empty($value) ? $default : @unserialize($value);
+
+        $result = $this->useSerialize ? @unserialize($value) : $value;
+
+        return empty($value) ? $default : $result;
     }
 
     public function set(string $key, mixed $value, null|int|DateInterval $ttl = null): bool
@@ -70,7 +75,7 @@ abstract class AbstractDriver implements CacheInterface
 
         return $this->setValue(
             $this->buildKey($key),
-            serialize($value),
+            $this->useSerialize ? serialize($value) : $value,
             $this->prepareTTL($ttl)
         );
     }
