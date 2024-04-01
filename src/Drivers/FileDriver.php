@@ -59,7 +59,7 @@ class FileDriver extends AbstractDriver
         return true;
     }
 
-    protected function getPath(string $key): string
+    public function getPath(string $key): string
     {
         return $this->config->getFolder() . DIRECTORY_SEPARATOR . md5(sha1($key)) . '.drc';
     }
