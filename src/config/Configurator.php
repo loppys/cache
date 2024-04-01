@@ -39,7 +39,7 @@ class Configurator implements ConfiguratorInterface
      * @throws BuildConfigException
      * @throws UniqueOptionException
      */
-    public function buildConfig(string $driver): DriverConfig
+    public function buildConfig(string $driver, array $overrideOptions = []): DriverConfig
     {
         if (empty($driver)) {
             throw new BuildConfigException('empty driver name');
@@ -126,6 +126,12 @@ class Configurator implements ConfiguratorInterface
             }
 
             $config->{$dck} = $prepareValue;
+        }
+
+        if (!empty($overrideOptions)) {
+            foreach ($overrideOptions as $n => $o) {
+                $config->addOption($n, $o);
+            }
         }
 
         if (!file_exists($instancePath)) {

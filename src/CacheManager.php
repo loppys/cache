@@ -46,7 +46,7 @@ class CacheManager
      * @throws BuildConfigException
      * @throws UniqueOptionException
      */
-    public function createDriver(string $name): AbstractDriver
+    public function createDriver(string $name, array $options = []): AbstractDriver
     {
         $driver = $this->getDriver($name);
         if ($driver !== null) {
@@ -61,7 +61,7 @@ class CacheManager
             $defaultDriver = $this->configurator->getDefaultDriver();
 
             if (class_exists($defaultDriver)) {
-                $config = $this->configurator->buildConfig($defaultDriver);
+                $config = $this->configurator->buildConfig($defaultDriver, $options);
 
                 if (!$config->isEnabled()) {
                     $this->triggerNotice("cache driver '{$name}' disabled.");
@@ -87,7 +87,7 @@ class CacheManager
         }
 
         if (class_exists($driver)) {
-            $config = $this->configurator->buildConfig($driver);
+            $config = $this->configurator->buildConfig($driver, $options);
             $this->addDriver($name, new $driver($config));
 
             if (!$config->isEnabled()) {
