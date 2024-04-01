@@ -11,7 +11,7 @@
   "require": {
     "php": ">=8.0",
     "ext-json": "*",
-    "psr/simple-cache": "3.0.x-dev"
+    "psr/simple-cache": "^3.0"
   },
   "minimum-stability": "dev"
 }
