@@ -86,7 +86,7 @@ class DriverStorage
         DriverStorage::CONFIG_DRIVER => [
             'export' => [
                 'configs' => [
-                    DriverStorage::FILE_DRIVER
+                    'default'
                 ],
                 'options' => [
                     [
@@ -94,12 +94,17 @@ class DriverStorage
                         'type' => ConfigTypes::CONFIG_EXT
                     ]
                 ]
+            ],
+            'folder' => [
+                'alias' => 'root',
+                'value' => '/_cache/configs/',
+                'type' => ConfigTypes::DIR,
             ]
         ],
         DriverStorage::ROUTES_DRIVER => [
             'export' => [
                 'configs' => [
-                    DriverStorage::FILE_DRIVER
+                    'default'
                 ],
                 'options' => [
                     [
@@ -107,6 +112,11 @@ class DriverStorage
                         'type' => ConfigTypes::CONFIG_EXT
                     ]
                 ]
+            ],
+            'folder' => [
+                'alias' => 'root',
+                'value' => '/_cache/routes/',
+                'type' => ConfigTypes::DIR,
             ]
         ],
     ];
