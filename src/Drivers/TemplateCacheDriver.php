@@ -8,7 +8,7 @@ class TemplateCacheDriver extends FileDriver
 {
     protected bool $useSerialize = false;
 
-    protected function getPath(string $key): string
+    public function getPath(string $key): string
     {
         $fileName = md5(sha1($key));
         $subDir = substr($fileName, 3, 3);
