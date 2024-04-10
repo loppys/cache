@@ -18,7 +18,7 @@ class FileDriver extends AbstractDriver
     protected function getValue(string $key): mixed
     {
         $path = $this->getPath($key);
-        if (file_exists($path)) {
+        if (file_exists($path) && !$this->isExpire($path)) {
             return file_get_contents($path);
         }
 
