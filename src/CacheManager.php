@@ -23,6 +23,7 @@ use Vengine\Cache\Storage\DriverStorage;
  * @property-read RedisCacheDriver $redis
  * @property-read TemplateCacheDriver $template
  * @property-read RoutesCacheDriver $routes
+ * @property-read AbstractDriver $default
  */
 class CacheManager
 {
