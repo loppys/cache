@@ -47,7 +47,7 @@ abstract class AbstractDriver implements CacheInterface
             return false;
         }
 
-        return $this->hasValue($this->buildKey($key));
+        return $this->hasValue($key);
     }
 
     public function get(string $key, mixed $default = null): mixed
