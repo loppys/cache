@@ -32,7 +32,6 @@ class Configurator implements ConfiguratorInterface
         $this->setAlias('root', $_SERVER['DOCUMENT_ROOT'] ?: __DIR__, true);
         $this->setDefaultDriver($defaultCacheDriver);
         $this->addOption('config_file_ext', FileDriverConfig::class);
-        $this->addOption('test', 'test');
     }
 
     /**
