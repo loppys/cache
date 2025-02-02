@@ -50,3 +50,15 @@ jobs:
         with:
           version: ${{ steps.semvers.outputs.patch }}
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get the release version
+        id: latest-version
+        run: |
+          echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: ${{ steps.latest-version.outputs.version }}
+          tag: ${{ steps.latest-version.outputs.version }}
